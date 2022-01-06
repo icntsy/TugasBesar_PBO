@@ -10,7 +10,7 @@ public class AnimatedActor extends BaseActor
 {
     public float elapsedTime;
     public Animation anim;
-    private AnimatedActor mousey;
+    private AnimatedActor fishy;
 
     public AnimatedActor()
     {

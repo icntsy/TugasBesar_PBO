@@ -24,8 +24,8 @@ import com.badlogic.gdx.Screen;
 public class FishLevel implements Screen{
     private Stage mainStage;
     private Stage uiStage;
-    private AnimatedActor mouse;
-    private BaseActor cheese;
+    private AnimatedActor fish;
+    private BaseActor people;
     private BaseActor floor;
     private BaseActor winText;
     private boolean win;
@@ -59,15 +59,15 @@ public class FishLevel implements Screen{
         floor.setPosition( 0, 0 );
         mainStage.addActor( floor );
 
-        cheese = new BaseActor();
-        cheese.setTexture( new
+        people = new BaseActor();
+        people.setTexture( new
                 Texture(Gdx.files.internal("cheese.png")) );
-        cheese.setPosition( 400, 300 );
-        cheese.setOrigin( cheese.getWidth()/2,
-                cheese.getHeight()/2 );
+        people.setPosition( 400, 300 );
+        people.setOrigin( people.getWidth()/2,
+                people.getHeight()/2 );
 
-        mainStage.addActor( cheese );
-        mouse = new AnimatedActor(); //composisition
+        mainStage.addActor( people );
+        fish = new AnimatedActor(); //composisition
         TextureRegion[] frames = new TextureRegion[4];
         for (int n = 0; n < 4; n++)
         {
@@ -83,10 +83,10 @@ public class FishLevel implements Screen{
         Animation anim = new Animation(0.1f, framesArray,
                 Animation.PlayMode.LOOP_PINGPONG);
 
-        mouse.setAnimation( anim );
-        mouse.setOrigin( mouse.getWidth()/2, mouse.getHeight()/2 );
-        mouse.setPosition( 20, 20 );
-        mainStage.addActor(mouse);
+        fish.setAnimation( anim );
+        fish.setOrigin( fish.getWidth()/2, fish.getHeight()/2 );
+        fish.setPosition( 20, 20 );
+        mainStage.addActor(fish);
 
         winText = new BaseActor();
         winText.setTexture( new Texture(Gdx.files.internal("you-win.png")) );
@@ -107,17 +107,17 @@ public class FishLevel implements Screen{
 
     public void render(float dt){
         // process input
-        mouse.velocityX = 0;
-        mouse.velocityY = 0;
+        fish.velocityX = 0;
+        fish.velocityY = 0;
 
         if (Gdx.input.isKeyPressed(Keys.LEFT))
-            mouse.velocityX -= 300;
+            fish.velocityX -= 300;
         else if (Gdx.input.isKeyPressed(Keys.RIGHT))
-            mouse.velocityX += 300;
+            fish.velocityX += 300;
         else if (Gdx.input.isKeyPressed(Keys.UP))
-            mouse.velocityY += 300;
+            fish.velocityY += 300;
         else if (Gdx.input.isKeyPressed(Keys.DOWN))
-            mouse.velocityY -= 300;
+            fish.velocityY -= 300;
         else if (Gdx.input.isKeyPressed(Keys.M))
             game.setScreen( new FishMenu(game) );
 
@@ -126,14 +126,14 @@ public class FishLevel implements Screen{
         uiStage.act(dt);
 
         // bound mouse to the rectangle defined by mapWidth, mapHeight
-        mouse.setX( MathUtils.clamp( mouse.getX(),
-                0, mapWidth - mouse.getWidth() ));
-        mouse.setY( MathUtils.clamp( mouse.getY(),
-                0, mapHeight - mouse.getHeight() ));
+        fish.setX( MathUtils.clamp( fish.getX(),
+                0, mapWidth - fish.getWidth() ));
+        fish.setY( MathUtils.clamp( fish.getY(),
+                0, mapHeight - fish.getHeight() ));
 
         // check win condition: mouse must be overlapping cheese
-        Rectangle cheeseRectangle = cheese.getBoundingRectangle();
-        Rectangle mouseRectangle = mouse.getBoundingRectangle();
+        Rectangle cheeseRectangle = people.getBoundingRectangle();
+        Rectangle mouseRectangle = fish.getBoundingRectangle();
 
         if ( !win && cheeseRectangle.overlaps( mouseRectangle))
         {
@@ -148,7 +148,7 @@ public class FishLevel implements Screen{
                     ))
             ));
 
-            cheese.addAction( Actions.parallel(
+            people.addAction( Actions.parallel(
                     Actions.alpha(1),
                     Actions.rotateBy(360f, 1),
                     Actions.scaleTo(0,0, 2), // xAmt, yAmt,duration
@@ -167,8 +167,8 @@ public class FishLevel implements Screen{
         Camera cam = mainStage.getCamera();
 
         // center camera on player
-        cam.position.set( mouse.getX() + mouse.getOriginX(),
-                mouse.getY() + mouse.getOriginY(), 0 );
+        cam.position.set( fish.getX() + fish.getOriginX(),
+                fish.getY() + fish.getOriginY(), 0 );
 
         // bound camera to layout
         cam.position.x = MathUtils.clamp(cam.position.x,
